@@ -186,3 +186,66 @@ ConfigData ConfigManager::wczytajKonfiguracje(const QString &filePath)
 
     return config;
 }
+
+//moje
+QByteArray ConfigManager::serializacja(const ConfigData &config)
+{
+    QJsonObject root;
+
+    QJsonObject regulator;
+    regulator["aktywny_regulator"] = config.regulator.typ;
+
+    QJsonObject reg_pid;
+    reg_pid["wzmocnienie"] = config.regulator.pid.k;
+    reg_pid["stala_calkowania"] = config.regulator.pid.ti;
+    reg_pid["stala_rozniczkowania"] = config.regulator.pid.td;
+    regulator["pid"] = reg_pid;
+    root["regulator"] = regulator;
+
+    QJsonObject model_arx;
+    QJsonArray a_arr, b_arr;
+    for (double v : config.model.A) a_arr.append(v);
+    for (double v : config.model.B) b_arr.append(v);
+
+    model_arx["wspolczynniki_a"] = a_arr;
+    model_arx["wspolczynniki_b"] = b_arr;
+    model_arx["opoznienie_transportowe"] = config.model.opoznienie;
+    root["model_arx"] = model_arx;
+
+    QJsonDocument doc(root);
+    return doc.toJson(QJsonDocument::Compact);
+}
+
+ConfigData ConfigManager::deserializacja(const QByteArray &dane)
+{
+    ConfigData config;
+
+    QJsonDocument doc = QJsonDocument::fromJson(dane);
+    if (!doc.isObject()) return config;
+
+    QJsonObject root = doc.object();
+
+    if (root.contains("regulator")) {
+
+        QJsonObject r = root["regulator"].toObject();
+        if (r.contains("pid")) {
+
+            QJsonObject pid = r["pid"].toObject();
+            config.regulator.pid.k = pid["wzmocnienie"].toDouble();
+            config.regulator.pid.ti = pid["stala_calkowania"].toDouble();
+            config.regulator.pid.td = pid["stala_rozniczkowania"].toDouble();
+        }
+    }
+
+    if (root.contains("model_arx")) {
+
+        QJsonObject arx = root["model_arx"].toObject();
+        QJsonArray a = arx["wspolczynniki_a"].toArray();
+        QJsonArray b = arx["wspolczynniki_b"].toArray();
+        for (const auto &v : a) config.model.A.push_back(v.toDouble());
+        for (const auto &v : b) config.model.B.push_back(v.toDouble());
+        config.model.opoznienie = arx["opoznienie_transportowe"].toInt();
+    }
+
+    return config;
+}

@@ -65,6 +65,10 @@ class ConfigManager {
 public:
     static bool zapiszKonfiguracje(const ConfigData& config, const QString& directory);
     static ConfigData wczytajKonfiguracje(const QString& filePath);
+
+    //moje
+    static QByteArray serializacja(const ConfigData& config);
+    static ConfigData deserializacja(const QByteArray& dane);
 };
 
 #endif // CONFIGMANAGER_H

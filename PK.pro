@@ -1,4 +1,7 @@
-QT       += core gui charts
+QT += core gui charts
+QT += core network
+CONFIG += console
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
@@ -6,6 +9,8 @@ CONFIG += c++17
 INCLUDEPATH += headers
 
 SOURCES += \
+    mytcpclient.cpp \
+    mytcpserwer.cpp \
     src/arx.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
@@ -28,7 +33,9 @@ HEADERS += \
     headers/RegulatorPID.h \
     headers/ConfigManager.h \
     headers/Generator.h \
-    headers/Kontroler.h
+    headers/Kontroler.h \
+    mytcpclient.h \
+    mytcpserwer.h
 FORMS += \
     forms/arx.ui \
     forms/mainwindow.ui
