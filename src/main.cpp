@@ -10,6 +10,14 @@
 #include <iostream>
 #include <string>
 
+QString wektorDoStringa(const std::vector<double>& wektor) {
+
+    QString wynik = "[ ";
+    for(double v : wektor) wynik += QString::number(v) + " ";
+    wynik += "]";
+    return wynik;
+}
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -26,23 +34,30 @@ int main(int argc, char *argv[])
 
     if (wybor == 1) {
 
-        qInfo() << "\nTryb serwera";
         myTCPserwer *serwer = new myTCPserwer(&a);
 
-        if(serwer->uruchomSerwer(5555)) { qInfo() << "Czekam na klienta..."; }
-        else { qCritical() << "Blad"; return -1; }
+        if(serwer->uruchomSerwer(5555)) { qInfo().noquote() << "\nCzekam na klienta..."; }
 
         QObject::connect(serwer, &myTCPserwer::odebranoDane, [](quint8 typ, QByteArray dane){
 
             if (typ == 1) {
 
-                qInfo() << "\nOtrzymano dane!";
+                ConfigData odbConfig = ConfigManager::deserializacja(dane);
 
-                ConfigData odebranyConfig = ConfigManager::deserializacja(dane);
+                qInfo().noquote() << "Konfiguracja JSON:";
 
-                qInfo() << "PID: Kp =" << odebranyConfig.regulator.pid.k << "| Ti =" << odebranyConfig.regulator.pid.ti;
-                qInfo() << "Model ARX opoznienie =" << odebranyConfig.model.opoznienie;
-                qInfo() << "JSON: " << QString::fromUtf8(dane);
+                qInfo().noquote() << "[REGULATOR PID]";
+                qInfo().noquote() << "  Wzmocnienie (Kp)     : " << odbConfig.regulator.pid.k;
+                qInfo().noquote() << "  Czas calkowania (Ti) : " << odbConfig.regulator.pid.ti;
+                qInfo().noquote() << "  Czas rozniczk. (Td)  : " << odbConfig.regulator.pid.td;
+
+                qInfo().noquote() << "\n[MODEL ARX]";
+                qInfo().noquote() << "  Wielomian A          : " << wektorDoStringa(odbConfig.model.A);
+                qInfo().noquote() << "  Wielomian B          : " << wektorDoStringa(odbConfig.model.B);
+                qInfo().noquote() << "  Opoznienie (k)       : " << odbConfig.model.opoznienie;
+
+                qInfo().noquote() << "\nJSON przeslany przez siec:";
+                qInfo().noquote() << QString::fromUtf8(dane);
             }
         });
 
@@ -55,30 +70,32 @@ int main(int argc, char *argv[])
 
         QString ip = QString::fromStdString(ip_str);
 
-        qInfo() << "Laczenie z" << ip << "...";
+        qInfo().noquote() << "\nLaczenie z" << ip << "...";
 
         myTCPclient *klient = new myTCPclient(&a);
         klient->polaczZSerwerem(ip, 5555);
 
         QObject::connect(klient, &myTCPclient::polaczono, [klient](){
-
-            qInfo() << "Polaczono!";
+            qInfo().noquote() << "Polaczono!";
 
             ConfigData configDoWyslania;
+            configDoWyslania.regulator.typ = 0;
+
             configDoWyslania.regulator.pid.k = 4.5;
             configDoWyslania.regulator.pid.ti = 12.0;
             configDoWyslania.regulator.pid.td = 0.5;
-            configDoWyslania.model.A = {1.0, -0.5};
-            configDoWyslania.model.B = {0.2, 0.1};
+
+            configDoWyslania.model.A = {1.0, -0.6, 0.1};
+            configDoWyslania.model.B = {0.2, 0.05};
             configDoWyslania.model.opoznienie = 3;
 
             QByteArray bajtyJSON = ConfigManager::serializacja(configDoWyslania);
+
             klient->wyslijDane(1, bajtyJSON);
 
-            qInfo() << "Konfiguracja wysłana";
+            qInfo().noquote() << "Konfiguracja zostala wyslana pomyslnie.";
         });
     }
-    else { std::cout << "Zly wybor!" << std::endl; return 0; }
 
     return a.exec();
 }

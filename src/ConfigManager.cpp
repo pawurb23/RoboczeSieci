@@ -228,6 +228,7 @@ ConfigData ConfigManager::deserializacja(const QByteArray &dane)
     if (root.contains("regulator")) {
 
         QJsonObject r = root["regulator"].toObject();
+
         if (r.contains("pid")) {
 
             QJsonObject pid = r["pid"].toObject();
