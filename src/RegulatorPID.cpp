@@ -142,24 +142,25 @@ double RegulatorPID::symuluj(double uchyb)
     if (!m_anti_windup_wl || (!nasycone_gora && !nasycone_dol)) {
 
 
-        //________________________ TUTAJ EJST COS NIE TAK ___________________
+      //________________________ TUTAJ EJST COS NIE TAK ___________________
 
         if (m_ti > 0.0) { // Dzielenie przez zero (m_ti=0) całka off
-            // ZMIENIONE ZE SOBA WZORY WZGLEDEM SIEBIE
+
             if (m_tryb_calki == tryb_calki::stala_przed_suma) {
-                m_suma_uchybow += uchyb;
-                i = (1.0 / m_ti) * m_suma_uchybow;
-            } else {
                 m_suma_uchybow += (1.0 / m_ti) * uchyb;
                 i = m_suma_uchybow;
+
+            } else {
+                m_suma_uchybow += uchyb;
+                i = (1.0 / m_ti) * m_suma_uchybow;
 
             }
         } else {
             // Jeśli m_ti = 0, całka off
             i = 0.0;
-            m_suma_uchybow = 0.0; // Reset pamieci całki
-        }//_______________________________________________________
-    }
+            //m_suma_uchybow = 0.0; //  Reset pamieci całki <----Tutaj
+            // Błąd wzgldem instrukcji "nie zerować pamięci części całkującej"
+        }//______
 
     m_poprzednia_i = i; // Save aktualna wartość I na next cykl
     m_ostatnia_skladowa_i = i;
