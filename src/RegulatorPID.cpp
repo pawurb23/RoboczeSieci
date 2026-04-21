@@ -177,3 +177,4 @@ double RegulatorPID::symuluj(double uchyb)
 
     return u_wyjscie;
 }
+}
