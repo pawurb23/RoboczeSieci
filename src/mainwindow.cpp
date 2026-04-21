@@ -654,41 +654,42 @@ void MainWindow::updateNetworkStats(int pps, double avgLat, int lost)
 void MainWindow::setupRegulatorMode()
 {
     isRegulatorMode = true;
-    // Ukryj przycisk modelu ARX (bo model jest po stronie obiektu)
-    ui->ARX_model_button->setVisible(false);
+    ui->ARX_model_button->setEnabled(false);
+    ui->btnPolacz->setEnabled(false);
 }
 
 void MainWindow::setupObiektMode()
 {
     isRegulatorMode = false;
-    ui->PID_radioButton->setVisible(false);
-    ui->ONOFF_radioButton->setVisible(false);
-    ui->wzmocnienie_doubleSpinBox_3->setVisible(false);
-    ui->calka_doubleSpinBox_3->setVisible(false);
-    ui->rozniczka_doubleSpinBox_3->setVisible(false);
-    ui->histereza_doubleSpinBox_3->setVisible(false);
-    ui->antiwindup_checkBox_3->setVisible(false);
-    ui->checkBox_3->setVisible(false);
-    ui->sterowanie_doubleSpinBox_5->setVisible(false);
-    ui->sterowanie_doubleSpinBox_6->setVisible(false);
-    ui->doubleSpinBox_6->setVisible(false);
-    ui->przed_radioButton->setVisible(false);
-    ui->w_sumie_radioButton->setVisible(false);
-    ui->sqrt_syg_radioButton->setVisible(false);
-    ui->sin_syg_radioButton->setVisible(false);
-    ui->amp_square_doubleSpinBox_2->setVisible(false);
-    ui->period_square_doubleSpinBox_2->setVisible(false);
-    ui->sklad_stal_sqrt_doubleSpinBox->setVisible(false);
-    ui->fill_square_doubleSpinBox_2->setVisible(false);
-    ui->amp_sinus_doubleSpinBox_2->setVisible(false);
-    ui->period_sinus_doubleSpinBox_2->setVisible(false);
-    ui->sklad_stal_sin_doubleSpinBox->setVisible(false);
-    ui->doubleSpinBox_8->setVisible(false);
-    ui->add_syg_button->setVisible(false);
-    ui->del_syg_button->setVisible(false);
-    ui->sygn_sinus_l_2->setVisible(false);
-    ui->sygn_square_l_2->setVisible(false);
-    ui->ARX_model_button->setVisible(false);
+    ui->PID_radioButton->setEnabled(false);
+    ui->ONOFF_radioButton->setEnabled(false);
+    ui->wzmocnienie_doubleSpinBox_3->setEnabled(false);
+    ui->calka_doubleSpinBox_3->setEnabled(false);
+    ui->rozniczka_doubleSpinBox_3->setEnabled(false);
+    ui->histereza_doubleSpinBox_3->setEnabled(false);
+    ui->antiwindup_checkBox_3->setEnabled(false);
+    ui->checkBox_3->setEnabled(false);
+    ui->sterowanie_doubleSpinBox_5->setEnabled(false);
+    ui->sterowanie_doubleSpinBox_6->setEnabled(false);
+    ui->doubleSpinBox_6->setEnabled(false);
+    ui->przed_radioButton->setEnabled(false);
+    ui->w_sumie_radioButton->setEnabled(false);
+    ui->sqrt_syg_radioButton->setEnabled(false);
+    ui->sin_syg_radioButton->setEnabled(false);
+    ui->amp_square_doubleSpinBox_2->setEnabled(false);
+    ui->period_square_doubleSpinBox_2->setEnabled(false);
+    ui->sklad_stal_sqrt_doubleSpinBox->setEnabled(false);
+    ui->fill_square_doubleSpinBox_2->setEnabled(false);
+    ui->amp_sinus_doubleSpinBox_2->setEnabled(false);
+    ui->period_sinus_doubleSpinBox_2->setEnabled(false);
+    ui->sklad_stal_sin_doubleSpinBox->setEnabled(false);
+    ui->doubleSpinBox_8->setEnabled(false);
+    ui->add_syg_button->setEnabled(false);
+    ui->del_syg_button->setEnabled(false);
+    ui->sygn_sinus_l_2->setEnabled(false);
+    ui->sygn_square_l_2->setEnabled(false);
+    ui->ARX_model_button->setEnabled(true);
+    ui->btnSerwer->setEnabled(false);
 }
 
 //Wykresy

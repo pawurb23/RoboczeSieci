@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1343</width>
-    <height>1033</height>
+    <height>1081</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,7 +39,7 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>200</height>
+          <height>160</height>
          </size>
         </property>
         <property name="title">
@@ -47,88 +47,100 @@
         </property>
         <layout class="QGridLayout" name="gridLayout_sieć">
          <item row="0" column="0">
-          <widget class="QLabel" name="label_ip">
-           <property name="text">
-            <string>IP:</string>
-           </property>
-          </widget>
+          <layout class="QFormLayout" name="formLayout">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_ip">
+             <property name="text">
+              <string>IP:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="poleIP">
+             <property name="text">
+              <string>127.0.0.1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_port">
+             <property name="text">
+              <string>Port:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="polePort">
+             <property name="minimum">
+              <number>1024</number>
+             </property>
+             <property name="maximum">
+              <number>65535</number>
+             </property>
+             <property name="value">
+              <number>5555</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="poleIP">
-           <property name="text">
-            <string>127.0.0.1</string>
-           </property>
-          </widget>
+         <item row="3" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QPushButton" name="btnRozlacz">
+             <property name="text">
+              <string>Rozłącz</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnPolacz">
+             <property name="text">
+              <string>Połącz (Klient)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnSerwer">
+             <property name="text">
+              <string>Uruchom Serwer</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_port">
-           <property name="text">
-            <string>Port:</string>
-           </property>
-          </widget>
+         <item row="8" column="0" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QLabel" name="lblLatency">
+             <property name="text">
+              <string>Opóźnienie śr.: 0 ms</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblPPS">
+             <property name="text">
+              <string>Pakiety/s: 0</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblLost">
+             <property name="text">
+              <string>Straty: 0</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
-         <item row="1" column="1">
-          <widget class="QSpinBox" name="polePort">
-           <property name="minimum">
-            <number>1024</number>
-           </property>
-           <property name="maximum">
-            <number>65535</number>
-           </property>
-           <property name="value">
-            <number>5555</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0" colspan="2">
-          <widget class="QPushButton" name="btnSerwer">
-           <property name="text">
-            <string>Uruchom Serwer</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0" colspan="2">
-          <widget class="QPushButton" name="btnPolacz">
-           <property name="text">
-            <string>Połącz (Klient)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0" colspan="2">
-          <widget class="QPushButton" name="btnRozlacz">
-           <property name="text">
-            <string>Rozłącz</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0" colspan="2">
+         <item row="7" column="0" colspan="2">
           <widget class="QLabel" name="lblStatus">
            <property name="styleSheet">
             <string>color: red; font-weight: bold;</string>
            </property>
            <property name="text">
             <string>Status: Rozłączono</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0" colspan="2">
-          <widget class="QLabel" name="lblPPS">
-           <property name="text">
-            <string>Pakiety/s: 0</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0" colspan="2">
-          <widget class="QLabel" name="lblLatency">
-           <property name="text">
-            <string>Opóźnienie śr.: 0 ms</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0" colspan="2">
-          <widget class="QLabel" name="lblLost">
-           <property name="text">
-            <string>Straty: 0</string>
            </property>
           </widget>
          </item>
@@ -275,7 +287,7 @@
            <double>10.000000000000000</double>
           </property>
           <property name="stepType">
-           <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+           <enum>QAbstractSpinBox::AdaptiveDecimalStepType</enum>
           </property>
           <property name="value">
            <double>50.000000000000000</double>
@@ -499,40 +511,44 @@
            </layout>
           </item>
           <item>
-           <widget class="QPushButton" name="memory_reset_i_button_2">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Reset pamięci całkującej</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="memory_reset_d_button_2">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Reset pamięci różniczkującej</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <widget class="QPushButton" name="memory_reset_d_button_2">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Reset pamięci różniczkującej</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="memory_reset_i_button_2">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>10</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Reset pamięci całkującej</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <widget class="QCheckBox" name="antiwindup_checkBox_3">
@@ -598,7 +614,7 @@
             <item>
              <spacer name="horizontalSpacer">
               <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
+               <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -1023,7 +1039,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>1343</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
