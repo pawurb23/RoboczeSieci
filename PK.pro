@@ -9,6 +9,7 @@ CONFIG += c++17
 INCLUDEPATH += headers
 
 SOURCES += \
+    PakietLicz.cpp \
     mytcpclient.cpp \
     mytcpserwer.cpp \
     src/arx.cpp \
@@ -24,6 +25,8 @@ SOURCES += \
 
 
 HEADERS += \
+    Network.h \
+    PakietLicz.h \
     headers/arx.h \
     headers/mainwindow.h \
     headers/ModelARX.h \
