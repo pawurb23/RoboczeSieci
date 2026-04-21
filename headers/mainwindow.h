@@ -13,10 +13,14 @@
 #include <QLabel>
 #include <QGroupBox>
 #include <QScrollArea>
+#include <QHash>
+#include <QDateTime>
 
 #include "Kontroler.h"
 #include "mytcpclient.h"
 #include "mytcpserwer.h"
+#include "Network.h"
+#include "PakietLicz.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,57 +31,61 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(bool regulatorMode, QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
+    // Istniejące sloty
     void on_ARX_model_button_clicked();
     void on_model_update(std::vector<double> A, std::vector<double> B, int k, double szum);
-    void upc();
     void updateControllerParams();
     void on_start_stop_clicked();
     void on_reset_clicked();
-    
     void updateSimulation();
-    
     void on_save_button_2_clicked();
     void on_read_button_2_clicked();
-
-//    void on_memory_reset_d_button_2_clicked();
-
-//    void on_memory_reset_i_button_2_clicked();
-
     void on_add_syg_button_clicked();
-
     void on_del_syg_button_clicked();
 
-//sk
-    void on_przyciskPolacz_clicked();
-    void on_przyciskUruchomSerwer_clicked();
-    void on_przyciskRozlacz_clicked();
+    // Sloty dla przycisków sieciowych (nazwy zgodne z UI)
+    void on_btnPolacz_clicked();
+    void on_btnSerwer_clicked();
+    void on_btnRozlacz_clicked();
+
+    // Sloty dla stanu połączenia
     void ustawStanPolaczony();
     void ustawStanRozlaczony();
+
+    // Sloty dla komunikacji TCP
+    void onTcpConnected();
+    void onTcpDisconnected();
+    void onClientDataReceived(quint8 typ, QByteArray data);
+    void onServerDataReceived(quint8 typ, QByteArray data);
+
+    // Timer symulacji sieciowej (dla regulatora)
+    void onNetworkTimer();
+
+    // Aktualizacja statystyk
+    void updateNetworkStats(int pps, double avgLat, int lost);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
 
 private:
     Ui::MainWindow *ui;
-
-    // Kontroler aplikacji
     Kontroler* kontroler;
 
-    // Połaczenaia radio Buttonow
+
     QButtonGroup *groupRegulator;
     QButtonGroup *groupIntegral;
     QButtonGroup *groupSignal;
 
-    // Simulation Loop
+    // Symulacja offline 
     QTimer *timer;
     bool is_running;
     double time_step;
 
-    // Seires dla wykresow
+    // Serie wykresów
     QLineSeries *series_zadana;
     QLineSeries *series_regulowana;
     QLineSeries *series_uchyb;
@@ -86,24 +94,27 @@ private:
     QLineSeries *series_I;
     QLineSeries *series_D;
 
-    //sk
-    QWidget *zawartoscSymulacji;
-    QGroupBox *grupaSieciowa;
-    QLineEdit *poleIP;
-    QSpinBox *polePort;
-    QPushButton *btnPolacz;
-    QPushButton *btnSerwer;
-    QPushButton *btnRozlacz;
-    QLabel *lblStatus;
-
+    // Obiekty sieciowe
     myTCPclient *klient;
     myTCPserwer *serwer;
+    PacketStats *stats;
 
+    // Tryb pracy
+    bool isRegulatorMode;
+
+    // Dla trybu regulatora
+    QTimer *networkTimer;
+    int currentPacketId;
+    QHash<int, QDateTime> pendingPackets;
+    double lastReceivedY;
+
+    void setupRegulatorMode();
+    void setupObiektMode();
+    void sendConfig();
+    void sendControl(double u);
+    void updateCharts(double setpoint, double cv, double error, double control,
+                      double p, double i, double d);
     void zablokujKontrolkiSymulacji(bool zablokowane);
-
-
-
-    void updateCharts(double setpoint, double cv, double error, double control, double p,double i,double d);
 };
 
 #endif // MAINWINDOW_H
