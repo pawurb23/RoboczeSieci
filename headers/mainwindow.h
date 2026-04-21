@@ -7,8 +7,16 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <vector>
+#include <QLineEdit>
+#include <QSpinBox>
+#include <QPushButton>
+#include <QLabel>
+#include <QGroupBox>
+#include <QScrollArea>
 
 #include "Kontroler.h"
+#include "mytcpclient.h"
+#include "mytcpserwer.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -43,6 +51,13 @@ private slots:
 
     void on_del_syg_button_clicked();
 
+//sk
+    void on_przyciskPolacz_clicked();
+    void on_przyciskUruchomSerwer_clicked();
+    void on_przyciskRozlacz_clicked();
+    void ustawStanPolaczony();
+    void ustawStanRozlaczony();
+
 protected:
     void closeEvent(QCloseEvent *event) override;
 
@@ -70,6 +85,21 @@ private:
     QLineSeries *series_P;
     QLineSeries *series_I;
     QLineSeries *series_D;
+
+    //sk
+    QWidget *zawartoscSymulacji;
+    QGroupBox *grupaSieciowa;
+    QLineEdit *poleIP;
+    QSpinBox *polePort;
+    QPushButton *btnPolacz;
+    QPushButton *btnSerwer;
+    QPushButton *btnRozlacz;
+    QLabel *lblStatus;
+
+    myTCPclient *klient;
+    myTCPserwer *serwer;
+
+    void zablokujKontrolkiSymulacji(bool zablokowane);
 
 
 

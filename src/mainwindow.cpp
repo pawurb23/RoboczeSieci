@@ -193,6 +193,55 @@ MainWindow::MainWindow(QWidget *parent)
     //?
 
     updateControllerParams();
+
+    //sk
+    klient = new myTCPclient(this);
+    serwer = new myTCPserwer(this);
+
+    grupaSieciowa = new QGroupBox("Ustawienia Polaczenia TCP", this);
+    poleIP = new QLineEdit("192.168.0.1");
+    polePort = new QSpinBox();
+    polePort->setRange(1024, 65535);
+    polePort->setValue(5555);
+    btnPolacz = new QPushButton("Polacz (Klient)");
+    btnSerwer = new QPushButton("Uruchom Serwer");
+    btnRozlacz = new QPushButton("Rozlacz");
+    lblStatus = new QLabel("Status: Rozlaczono");
+    lblStatus->setStyleSheet("color: red; font-weight: bold;");
+
+    QGridLayout *siecLayout = new QGridLayout();
+    siecLayout->addWidget(new QLabel("IP:"), 0, 0);
+    siecLayout->addWidget(poleIP, 0, 1);
+    siecLayout->addWidget(new QLabel("Port:"), 1, 0);
+    siecLayout->addWidget(polePort, 1, 1);
+    siecLayout->addWidget(btnSerwer, 2, 0, 1, 2);
+    siecLayout->addWidget(btnPolacz, 3, 0, 1, 2);
+    siecLayout->addWidget(btnRozlacz, 4, 0, 1, 2);
+    siecLayout->addWidget(lblStatus, 5, 0, 1, 2);
+    grupaSieciowa->setLayout(siecLayout);
+
+    zawartoscSymulacji = new QWidget();
+    zawartoscSymulacji->setLayout(Ui_MainWindow::all_2);
+
+    QScrollArea *scrollArea = new QScrollArea();
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidget(zawartoscSymulacji);
+
+    QVBoxLayout *ostatecznyPrawyLayout = new QVBoxLayout();
+    ostatecznyPrawyLayout->addWidget(grupaSieciowa);
+    ostatecznyPrawyLayout->addWidget(scrollArea);
+
+    connect(btnPolacz, &QPushButton::clicked, this, &MainWindow::on_przyciskPolacz_clicked);
+    connect(btnSerwer, &QPushButton::clicked, this, &MainWindow::on_przyciskUruchomSerwer_clicked);
+    connect(btnRozlacz, &QPushButton::clicked, this, &MainWindow::on_przyciskRozlacz_clicked);
+
+    connect(klient, &myTCPclient::polaczono, this, &MainWindow::ustawStanPolaczony);
+    connect(serwer, &myTCPserwer::klientPodlaczony, this, &MainWindow::ustawStanPolaczony);
+
+    connect(klient, &myTCPclient::rozlaczono, this, &MainWindow::ustawStanRozlaczony);
+    connect(serwer, &myTCPserwer::klientOdlaczony, this, &MainWindow::ustawStanRozlaczony);
+
+    ustawStanRozlaczony();
 }
 
 MainWindow::~MainWindow()
@@ -723,4 +772,63 @@ void MainWindow::on_del_syg_button_clicked()
         ui->fill_square_doubleSpinBox_2->setValue(0.5);
         ui->period_square_doubleSpinBox_2->setValue(0.0);
     }
+}
+
+//sk
+void MainWindow::ustawStanPolaczony() {
+
+    poleIP->setEnabled(false);
+    polePort->setEnabled(false);
+    btnPolacz->setEnabled(false);
+    btnSerwer->setEnabled(false);
+    btnRozlacz->setEnabled(true);
+
+    lblStatus->setText("Status: POLACZONO");
+    lblStatus->setStyleSheet("color: green; font-weight: bold;");
+
+    zablokujKontrolkiSymulacji(false);
+}
+
+void MainWindow::ustawStanRozlaczony() {
+
+    poleIP->setEnabled(true);
+    polePort->setEnabled(true);
+    btnPolacz->setEnabled(true);
+    btnSerwer->setEnabled(true);
+    btnRozlacz->setEnabled(false);
+
+    lblStatus->setText("Status: ROZLACZONO");
+    lblStatus->setStyleSheet("color: red; font-weight: bold;");
+
+    zablokujKontrolkiSymulacji(true);
+}
+
+void MainWindow::zablokujKontrolkiSymulacji(bool zablokowane) {
+    // Tutaj musisz wpisać nazwy wskaźników do Twoich zakładek lub suwaków
+    // Przykład:
+    // ui->tabARX->setEnabled(!zablokowane);
+    // ui->tabPID->setEnabled(!zablokowane);
+    // btnStartSymulacja->setEnabled(!zablokowane);
+}
+
+void MainWindow::on_przyciskPolacz_clicked() {
+
+    klient->polaczZSerwerem(poleIP->text(), polePort->value());
+}
+
+void MainWindow::on_przyciskUruchomSerwer_clicked() {
+
+    if(serwer->uruchomSerwer(polePort->value())) {
+
+        btnSerwer->setEnabled(false);
+        btnPolacz->setEnabled(false);
+        lblStatus->setText("Status: OCZEKIWANIE...");
+    }
+}
+
+void MainWindow::on_przyciskRozlacz_clicked() {
+
+    klient->rozlaczZSerwerem();
+    serwer->zatrzymajSerwer();
+    ustawStanRozlaczony();
 }
